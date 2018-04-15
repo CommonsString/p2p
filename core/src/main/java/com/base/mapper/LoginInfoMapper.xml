@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.base.mapper.LoginInfoMapper" >
+
+	
+	<select id="getLoginInfo" parameterType="java.lang.String" resultType="LoginInfo">
+		select * from logininfo where loginInfoId = #{loginInfoId}
+	</select>  
+	
+	<!-- 注册，添加用户 -->
+	<insert id="addUser" parameterType="LoginInfo">
+		<!-- 主键生成策略 -->
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','') from dual
+		</selectKey>
+		insert into logininfo (id, userName, password, state, userType)
+		values (#{id}, #{userName}, #{password}, #{state}, #{userType})
+	</insert>
+	
+  	<!-- 用户是否存在  -->
+  	<select id="getUserIsCopy" parameterType="String" resultType="int">
+  		select count(id) from logininfo where userName = #{userName}
+  	</select>
+  	
+  	<!-- 管理员账户查重 -->
+  	<select id="getAdminForCount" parameterType="int" resultType="int">
+  		select count(id) from logininfo where userType = #{userType}
+  	</select>	
+  	
+  	<!-- 用户登录 -->
+  	<select id="loginUserInfo" resultType="LoginInfo">
+  		select * from logininfo where userName = #{userName} and password = #{password} AND userType = #{userType}
+  	</select>
+  	
+  	
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 针对mybatis框架的配置 -->
+<configuration>
+
+	<!-- 对mybatis的运行状态进行配置 -->
+	<settings>
+		<!-- 开启延迟加载配置 -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<!-- 当启用时, 有延迟加载属性的对象在被调用时将会完全加载任意属性。否则, 每种属性将会按需要加载,默认是开启的 -->
+		<setting name="aggressiveLazyLoading" value="false"/>
+		<!-- Object对象上面的哪些方法触发延迟加载,一般只写clone -->
+		<setting name="lazyLoadTriggerMethods" value="clone"/>
+	</settings>
+
+	<!-- 缓存 -->
+ 	<typeAliases>
+		<typeAlias type="org.mybatis.caches.redis.RedisCache" alias="redis"/>
+	</typeAliases> 
+	
+</configuration>

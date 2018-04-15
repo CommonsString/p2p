@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.base.mapper.UserInfoMapper" >
+	<!-- resultMap -->
+  	<resultMap type="com.base.domain.UserInfo" id="userInfoMap">
+  		<id property="userInfoId" column="userInfoId"/>
+  		<result property="version" column="version"/>
+  		<result property="bitState" column="bitState"/>
+  		<result property="realName" column="realName"/>
+  		<result property="idNumber" column="idNumber"/>
+  		<result property="phoneNumber" column="phoneNumber"/>
+  	</resultMap>
+  	<!-- 对象属性 -->
+  	<resultMap type="com.base.domain.UserInfo" id="userInfoMapExtend" extends="userInfoMap">
+  		<association property="incomeGrade" javaType="com.base.domain.SystemDictionaryItem" column="incomeGrade_Id" select="com.base.mapper.UserInfoMapper.getUserInfoById" />
+  		<association property="marriage" javaType="com.base.domain.SystemDictionaryItem" column="marriage_Id" select="com.base.mapper.UserInfoMapper.getUserInfoById" />
+  		<association property="kidCount" javaType="com.base.domain.SystemDictionaryItem" column="kidCount_Id" select="com.base.mapper.UserInfoMapper.getUserInfoById" />
+  		<association property="educationBackground" javaType="com.base.domain.SystemDictionaryItem" column="educationBackground_Id" select="com.base.mapper.UserInfoMapper.getUserInfoById" />
+  		<association property="houseCondition" javaType="com.base.domain.SystemDictionaryItem" column="houseCondition_Id" select="com.base.mapper.UserInfoMapper.getUserInfoById" />
+  	</resultMap>
+  	
+  	<!-- 乐观锁支持 -->
+  	<insert id="addUserInfo">
+  		insert into userInfo
+  		(userInfoId, version, bitState, realName, idNumber, phoneNumber, 
+  		incomeGrade_Id, marriage_Id, kidCount_Id, educationBackground_Id, houseCondition_Id)
+  		values 
+  		(#{userInfoId}, 0, #{bitState}, #{realName}, #{idNumber}, #{phoneNumber}, 
+  		#{incomeGrade.SystemDictionaryItemId}, 
+  		#{marriage.SystemDictionaryItemId}, 
+  		#{kidCount.SystemDictionaryItemId}, 
+  		#{educationBackground.SystemDictionaryItemId}, 
+  		#{houseCondition.SystemDictionaryItemId})
+  	</insert>
+  	
+  	<update id="updateUserInfo">
+  		update userInfo 
+  		set 
+  		version = version + 1, 
+  		realName = #{realName}, 
+  		idNumber = #{idNumber}, 
+  		phoneNumber = #{phoneNumber}, 
+  		incomeGrade_Id = #{incomeGrade.SystemDictionaryItemId}, 
+  		marriage_Id = #{marriage.SystemDictionaryItemId}, 
+  		kidCount_Id = #{kidCount.SystemDictionaryItemId}, 
+  		educationBackground_Id = #{educationBackground.SystemDictionaryItemId}, 
+  		houseCondition_Id = #{houseCondition.SystemDictionaryItemId}
+  		where
+  		userInfoId = #{userInfoId} and version = #{version}
+  	</update>
+  	
+  	<sql id="baseSql">
+  	</sql>
+  	
+  	<select id="getUserInfoById" resultMap="userInfoMapExtend" parameterType="String">
+  		select * from userinfo where userInfoId = #{userInfoId}
+  	</select>
+  	
+  	
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.base.mapper.AccountMapper" >
+	<!-- resultMap -->
+  	<resultMap type="com.base.domain.Account" id="accountMap">
+  		<id property="accountId" column="accountId"/>
+  		<result property="version" column="version"/>
+  		<result property="tradePassword" column="tradePassword"/>
+  		<result property="usableAmount" column="usableAmount"/>
+  		<result property="freezedAmount" column="freezedAmount"/>
+  		<result property="unReceiveInterest" column="unReceiveInterest"/>
+  		<result property="unReceivePrincipal" column="unReceivePrincipal"/>
+  		<result property="unReturnAmount" column="unReturnAmount"/>
+  		<result property="remainBorrowLimit" column="remainBorrowLimit"/>
+  		<result property="borrowLimit" column="borrowLimit"/>
+  	</resultMap>
+  	
+  	<!-- 乐观锁支持 -->
+  	<insert id="addAccount">
+  		insert into account 
+  		(accountId, version, tradePassword, usableAmount, freezedAmount, unReceiveInterest, unReceivePrincipal, 
+  		unReturnAmount, remainBorrowLimit, borrowLimit)
+  		values 
+  		(#{accountId}, 0, #{tradePassword}, #{usableAmount}, #{freezedAmount}, #{unReceiveInterest}, #{unReceivePrincipal}, 
+  		#{unReturnAmount}, #{remainBorrowLimit}, #{borrowLimit})
+  	</insert>
+  	
+  	<update id="updateAccountByIdAndVersion">
+  		update account 
+  		set 
+  		version = version + 1, 
+  		tradePassword = #{tradePassword}, 
+  		usableAmount = #{usableAmount}, 
+  		freezedAmount = #{freezedAmount}, 
+  		unReceiveInterest = #{unReceiveInterest}, 
+  		unReceivePrincipal = #{unReceivePrincipal}, 
+  		unReturnAmount = #{unReturnAmount}, 
+  		remainBorrowLimit = #{remainBorrowLimit}, 
+  		borrowLimit = #{borrowLimit}
+  		where
+  		accountId = #{accountId} and version = #{version}
+  	</update>
+  	
+  	<sql id="baseAttr">
+  		accountId, version, tradePassword, usableAmount, freezedAmount, unReceiveInterest, unReceivePrincipal, 
+  		unReturnAmount, remainBorrowLimit, borrowLimit
+  	</sql>
+  	
+  	<select id="getAccountById" resultMap="accountMap">
+  		select <include refid="baseAttr" />
+  		from account 
+  		where accountId = #{accountId}
+  	</select>
+  	
+  	
+</mapper>
